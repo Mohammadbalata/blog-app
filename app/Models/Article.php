@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class Article extends Model
 {
@@ -64,7 +66,16 @@ class Article extends Model
                 'image', 'max:1048576', 'dimensions:min_width=100,min_height=100',
             ],
             'body' => 'required|string|min:10',
-            'tags' => 'required',
+            'tags' => ['required',
+            function ($attribute, $value, $fail) {
+                // Check each item in the "tags" array
+                foreach (json_decode($value) as $item) {
+                    if (!DB::table('tags')->where('name', $item->value)->exists()) {
+                        $fail("The tag '$item->value' does not exist.");
+                    }
+                }
+            },
+        ],
         ];
     }
 }

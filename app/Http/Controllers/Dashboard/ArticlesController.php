@@ -113,6 +113,8 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate(Article::rules());
+
         $article = Article::findOrFail($id);
         $old_image = $article->image;
         $data = $request->except(['image', 'tags']);
@@ -133,12 +135,9 @@ class ArticlesController extends Controller
         $tag_ids = [];
         foreach ($tags as $item) {
             $tag = $saved_tags->where('name', $item->value)->first();
-            if (!$tag) {
-                $tag = Tag::create([
-                    'name' => $item->value,
-                ]);
+            if ($tag) {
+                $tag_ids[] = $tag->id;
             }
-            $tag_ids[] = $tag->id;
         }
 
         $article->tags()->sync($tag_ids);
