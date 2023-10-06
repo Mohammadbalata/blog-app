@@ -835,9 +835,9 @@
 </head>
 
 <body class="antialiased">
-    <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+    <div class=" ">
         @if (Route::has('login'))
-        <div class="flex gap-4 sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+        <div class="flex justify-between mx-10 mt-5">
             <a href="{{ route('about') }}" class="  font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">About</a>
 
             @auth
@@ -856,21 +856,21 @@
         @endif
 
 
-        <div class="grid grid-cols-2 gap-4">
-            @foreach($articles as $article)
-            <div class="w-full max-w-7xl mx-auto p-6 lg:p-8 ">
-                <a href="{{'/articles/' . $article->id}}" class="overflow-hidden flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                    <img class="object-cover w-[50%]  h-[200px] rounded-t-lg  md:rounded-none md:rounded-l-lg" src="{{$article->image ? asset('storage/'. $article->image) : asset('noimageavailable.jpg') }}" alt="">
-                    <div class="flex flex-col w-[50%] justify-between p-4 leading-normal">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{$article->title}}</h5>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{$article->body}}</p>
-                    </div>
-                </a>
+        
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        @foreach($articles as $article)
+        <div class="w-full max-w-7xl mx-auto p-6 lg:p-8 ">
+            <a href="{{'/articles/' . $article->id}}" class="overflow-hidden flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                <img class="object-cover w-[50%]  h-[200px] rounded-t-lg  md:rounded-none md:rounded-l-lg" src="{{$article->image ? asset('storage/'. $article->image) : asset('noimageavailable.jpg') }}" alt="">
+                <div class="flex flex-col w-[50%] justify-between p-4 leading-normal">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{$article->title}}</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{$article->body}}</p>
+                </div>
+            </a>
 
-            </div>
-            @endforeach
         </div>
-
+        @endforeach
     </div>
 </body>
 

@@ -36,7 +36,7 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string']);
+        $request->validate(['name' => 'required|string|unique:tags,name']);
         $tag = Tag::create([
             'name' => $request->name
         ]);
@@ -71,7 +71,7 @@ class TagsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate(['name' => 'required|string']);
+        $request->validate(['name' => 'required|string|unique:tags,name,$id']);
         try {
             $tag = Tag::findOrFail($id);
         } catch (Exception $e) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Tag;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -33,7 +34,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string']);
+        $request->validate(['name' => 'required|string|unique:categories,name']);
         $category = Category::create([
             'name' => $request->name
         ]);
@@ -70,7 +71,7 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate(['name' => 'required|string']);
+        $request->validate(['name' => 'required|string|unique:categories,name,$id']);
         try {
             $category = Category::findOrFail($id);
         } catch (Exception $e) {

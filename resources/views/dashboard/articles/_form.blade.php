@@ -16,7 +16,7 @@
   @endif
 </div>
 
-<x-form.input label="Tags" name="tags" value="{{  $tags ?? '' }}" />
+<x-form.input label="Tags" name='tags'  placeholder='write tags to add below' value="{{ $choosenTags }}" />
 
 {{--<div class="w-full mt-4">
   <label class="inline-block text-sm text-gray-600" for="Multiselect">Select multiple tags</label>
@@ -29,10 +29,9 @@
   </div>
 </div>--}}
 
-{{--<x-form.input name="tags" label="Tags / seperated by , " value="{{$tags ?? '' }}" />--}}
+{{--<x-form.input name="tags"  label="Tags / seperated by , " />--}}
 
-
-<button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{$button_label ?? 'Save'}}</button>
+<button type="submit" class=" mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{$button_label ?? 'Save'}}</button>
 
 
 
@@ -45,7 +44,48 @@
 <script src="{{ asset('js/tagify.min.js') }}"></script>
 <script src="{{ asset('js/tagify.polyfills.min.js') }}"></script> 
 <script>
-    var inputElm = document.querySelector('[name=tags]'),
-    tagify = new Tagify (inputElm);
+ 
+ var input = document.querySelector('input[name=tags]'),
+    // init Tagify script on the above inputs
+    tagify = new Tagify(input, {
+        whitelist : @json($tags),
+        dropdown: {
+            position: "manual",
+            maxItems: Infinity,
+            enabled: 0,
+            classname: "customSuggestionsList"
+        },
+        templates: {
+            dropdownItemNoMatch() {
+                return `<div class='empty'>Nothing Found</div>`;
+            }
+        },
+        enforceWhitelist: true
+    })
+
+    tagify.on("dropdown:show", onSuggestionsListUpdate)
+          .on("dropdown:hide", onSuggestionsListHide)
+          .on('dropdown:scroll', onDropdownScroll)
+
+    renderSuggestionsList()  // defined down below
+
+    // ES2015 argument destructuring
+    function onSuggestionsListUpdate({ detail:suggestionsElm }){
+        console.log(  suggestionsElm  )
+    }
+
+    function onSuggestionsListHide(){
+        console.log("hide dropdown")
+    }
+
+    function onDropdownScroll(e){
+        console.log(e.detail)
+      }
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
+    function renderSuggestionsList(){
+        tagify.dropdown.show() // load the list
+        tagify.DOM.scope.parentNode.appendChild(tagify.DOM.dropdown)
+    }
 </script>
 @endpush

@@ -38,8 +38,8 @@ class ArticlesController extends Controller
     {
         $categories = Category::all();
         $article = new Article();
-        
-        return view('dashboard.articles.create', compact('categories', 'article'));
+        $tags = Tag::all()->pluck('name')->toArray();
+        return view('dashboard.articles.create', compact('categories', 'article', 'tags'));
     }
 
     /**
@@ -60,14 +60,12 @@ class ArticlesController extends Controller
         $tag_ids = [];
         foreach ($tags as $item) {
             $tag = $saved_tags->where('name', $item->value)->first();
-            if (!$tag) {
-                $tag = Tag::create([
-                    'name' => $item->value,
-                ]);
+            if ($tag) {
+                $tag_ids[] = $tag->id;
             }
-            $tag_ids[] = $tag->id;
         }
 
+        
         $article->tags()->sync($tag_ids);
 
         return Redirect::route('dashboard.articles.index')
@@ -81,6 +79,7 @@ class ArticlesController extends Controller
     public function show(Article $article)
     {
         
+        return view('show', compact('article', ));
     }
 
     /**
@@ -99,12 +98,14 @@ class ArticlesController extends Controller
             return Redirect::route('dashboard.articles.index')
                 ->with('info', 'not found');
         }
-        $tags = implode(' ,', $article->tags()->pluck('name')->toArray());
+        $tags = Tag::all()->pluck('name')->toArray();
+        $choosenTags = implode(' ,',$article->tags()->pluck('name')->toArray());
+        
 
         $categories = Category::where('id', '<>', $article->category_id)
             ->get();
 
-        return view('dashboard.articles.edit', compact('categories', 'article', 'tags'));
+        return view('dashboard.articles.edit', compact('categories', 'article', 'tags','choosenTags'));
     }
 
     /**
